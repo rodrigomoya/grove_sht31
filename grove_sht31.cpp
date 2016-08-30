@@ -1,9 +1,9 @@
 /*
  * grove_sht31.cpp
  *
- * Copyright (c) 2012 seeed technology inc.
- * Website    : www.seeed.cc
- * Author     : Lambor, Jack
+ * Copyright (c) 2016 Rizoma.io .
+ * Website    : www.rizoma.io
+ * Author     : Rodrigo Moya
  *
  * The MIT License (MIT)
  *
