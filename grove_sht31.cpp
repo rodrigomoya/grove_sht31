@@ -30,24 +30,36 @@
 #include "grove_sht31.h" 
 
 GroveSHT31::GroveSHT31(int pinsda, int pinscl) {
-    this->i2c = (I2C_T *)malloc(sizeof(I2C_T));
-    suli_i2c_init(i2c, pinsda, pinscl);
-    Wire.begin();
-    reset();
+  this->i2c = (I2C_T *)malloc(sizeof(I2C_T));
+  suli_i2c_init(i2c, pinsda, pinscl);  
+  Wire.begin();  
+  // heater(true);
+  // delay(10000);
+  
+  _i2caddr = SHT31_ADDR;
+  reset();  
 }
 
-uint16_t GroveSHT31::readStatus(void) {
-  writeCommand(SHT31_READSTATUS);
-  Wire.requestFrom(SHT31_DEFAULT_ADDR, (uint8_t)3);
-  uint16_t stat = Wire.read();
-  stat <<= 8;
-  stat |= Wire.read();
-  return stat;
+bool GroveSHT31::read_temperature(float *temperature) {
+  if (! getTempHum()) return NAN;
+  *temperature = temp;
+
+  return true;  
+}
+
+
+bool GroveSHT31::read_humidity(float *humidity) {  
+  if (! getTempHum()) return NAN;
+  *humidity = humi;
+  return true;  
+}
+
+uint16_t GroveSHT31::readStatus(void) {  
 }
 
 void GroveSHT31::reset(void) {
   writeCommand(SHT31_SOFTRESET);
-  delay(10);
+  delay(500);
 }
 
 void GroveSHT31::heater(boolean h) {
@@ -57,27 +69,29 @@ void GroveSHT31::heater(boolean h) {
     writeCommand(SHT31_HEATERDIS);
 }
 
-
-bool GroveSHT31::read_temperature(float *temperature) {
-  if (! readTempHum()) return NAN;
-    *temperature = temp;
-    return true;  
-}
+uint8_t GroveSHT31::crc8(const uint8_t *data, int len) {
+  const uint8_t POLYNOMIAL(0x31);
+  uint8_t crc(0xFF);
   
+  for ( int j = len; j; --j ) {
+      crc ^= *data++;
 
-bool GroveSHT31::read_humidity(float *humidity) {
-  if (! readTempHum()) return NAN;
-    *humidity = humi;
-    return true;  
+      for ( int i = 8; i; --i ) {
+  crc = ( crc & 0x80 )
+    ? (crc << 1) ^ POLYNOMIAL
+    : (crc << 1);
+      }
+  }
+  return crc; 
 }
 
 
-bool GroveSHT31::readTempHum(void) {
+boolean GroveSHT31::getTempHum(void) {
   uint8_t readbuffer[6];
-
-  writeCommand(SHT31_MEAS_HIGHREP);  
+  writeCommand(SHT31_MEAS_HIGHREP);
+  
   delay(500);
-  Wire.requestFrom(SHT31_DEFAULT_ADDR, (uint8_t)6);
+  Wire.requestFrom(_i2caddr, (uint8_t)6);
   if (Wire.available() != 6) 
     return false;
   for (uint8_t i=0; i<6; i++) {
@@ -95,7 +109,7 @@ bool GroveSHT31::readTempHum(void) {
   SRH |= readbuffer[4];
 
   if (readbuffer[5] != crc8(readbuffer+3, 2)) return false;
-
+ 
   double stemp = ST;
   stemp *= 175;
   stemp /= 0xffff;
@@ -112,25 +126,8 @@ bool GroveSHT31::readTempHum(void) {
 }
 
 void GroveSHT31::writeCommand(uint16_t cmd) {
-  Wire.beginTransmission(SHT31_DEFAULT_ADDR);
+  Wire.beginTransmission(_i2caddr);
   Wire.write(cmd >> 8);
   Wire.write(cmd & 0xFF);
-  Wire.endTransmission();  
-}
-
-uint8_t GroveSHT31::crc8(const uint8_t *data, int len)
-{
-  const uint8_t POLYNOMIAL(0x31);
-  uint8_t crc(0xFF);
-  
-  for ( int j = len; j; --j ) {
-      crc ^= *data++;
-
-      for ( int i = 8; i; --i ) {
-    crc = ( crc & 0x80 )
-      ? (crc << 1) ^ POLYNOMIAL
-      : (crc << 1);
-      }
-  }
-  return crc;
+  Wire.endTransmission();      
 }

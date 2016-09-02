@@ -42,7 +42,7 @@
 //AUTHOR            "Rodrigo Moya Toro - rodrigo@rizoma.io"
 
 
-#define SHT31_DEFAULT_ADDR    0x44
+#define SHT31_ADDR    0x44
 #define SHT31_MEAS_HIGHREP_STRETCH 0x2C06
 #define SHT31_MEAS_MEDREP_STRETCH  0x2C0D
 #define SHT31_MEAS_LOWREP_STRETCH  0x2C10
@@ -57,22 +57,24 @@
 
 class GroveSHT31
 {
-    public:
-        GroveSHT31(int pinsda, int pinscl);
-        bool read_temperature(float *temperature);
-        bool read_humidity(float *humidity);
 
-        uint8_t crc8(const uint8_t *data, int len);
-        uint16_t readStatus(void);
-        void reset(void);
-        void heater(boolean);
-        
-    private:
-        I2C_T *i2c;
-        float humi, temp;
-        bool readData(void);
-        bool readTempHum(void);
-        void writeCommand(uint16_t cmd);        
+  public:
+    GroveSHT31(int pinsda, int pinscl);;    
+    boolean begin(uint8_t i2caddr = SHT31_ADDR);
+    bool read_temperature(float *temperature);
+    bool read_humidity(float *humidity);
+    uint16_t readStatus(void);
+    void reset(void);
+    void heater(boolean);
+    uint8_t crc8(const uint8_t *data, int len);
+
+  private:
+    I2C_T *i2c;
+    boolean getTempHum(void);
+    void writeCommand(uint16_t cmd);
+
+    uint8_t _i2caddr;
+    float humi, temp;      
 };
 
 #endif
