@@ -33,8 +33,8 @@ GroveSHT31::GroveSHT31(int pinsda, int pinscl) {
   this->i2c = (I2C_T *)malloc(sizeof(I2C_T));
   suli_i2c_init(i2c, pinsda, pinscl);  
   Wire.begin();  
-  // heater(true);
-  // delay(10000);
+  heater(true);
+  delay(3000);
   
   _i2caddr = SHT31_ADDR;
   reset();  
