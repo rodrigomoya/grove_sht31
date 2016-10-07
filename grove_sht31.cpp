@@ -152,39 +152,22 @@ boolean GroveSHT31::getTempHum(void) {
       d3 = 100.2880;
       break;
     case sorgo:
-      c1 = 
-      c2 =
-      c3 = 
-      d1 =
-      d2 =
-      d3 = 
+      c1 = 0.8532;	
+      c2 = 113.7250;	
+      c3 = 2.4757;
+      d1 = 0.3565;	
+      d2 = 0.0509;	
+      d3 = 102.8490;
       break;
-    case arrozcascara:
-      c1 = 
-      c2 =
-      c3 = 
-      d1 =
-      d2 =
-      d3 = 
+    case trigo:
+      c1 = 2.3007;	
+      c2 = 55.8150;	
+      c3 = 2.2857;
+      d1 = 0.3562;	
+      d2 = 0.0568;	
+      d3 = 50.9980;
       break;
-    case VALUE_1:
-      c1 = 
-      c2 =
-      c3 = 
-      d1 =
-      d2 =
-      d3 = 
-      break;
-    case VALUE_2.value_:
-      c1 = 
-      c2 =
-      c3 = 
-      d1 =
-      d2 =
-      d3 = 
-      break;
-    case 3:
-      printf("Value is 3\n");
+    default:
       break;
   }
   
