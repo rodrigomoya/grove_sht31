@@ -120,8 +120,83 @@ boolean GroveSHT31::getTempHum(void) {
   shum *= 100;
   shum /= 0xFFFF;
   
-  humi = shum;
+  /*          //Cálculo de huemdad del grano a partir de los modelos de Henderson y Chung-Pfost
   
+  double c1, c2, c3;
+  double d1, d2, d3;
+  
+  switch (grano){     //Determinación de parámetros según tipo de grano
+  
+    case arrozcascara:
+      c1 = 1.9187;	
+      c2 = 51.1610;	
+      c3 = 2.4451;
+      d1 = 0.2939;	
+      d2 = 0.0460;	
+      d3 = 35.7030;
+      break;
+    case maiz:
+      c1 = 8.6541;
+      c2 = 49.81;	
+      c3 = 1.8634;
+      d1 = 0.3387;
+      d2 = 0.0590;
+      d3 = 30.2050;
+      break;
+    case soja:
+      c1 = 30.5327;
+      c2 = 134.1360;
+      c3 = 1.2164;
+      d1 = 0.4163;
+      d2 = 0.0719;	
+      d3 = 100.2880;
+      break;
+    case sorgo:
+      c1 = 
+      c2 =
+      c3 = 
+      d1 =
+      d2 =
+      d3 = 
+      break;
+    case arrozcascara:
+      c1 = 
+      c2 =
+      c3 = 
+      d1 =
+      d2 =
+      d3 = 
+      break;
+    case VALUE_1:
+      c1 = 
+      c2 =
+      c3 = 
+      d1 =
+      d2 =
+      d3 = 
+      break;
+    case VALUE_2.value_:
+      c1 = 
+      c2 =
+      c3 = 
+      d1 =
+      d2 =
+      d3 = 
+      break;
+    case 3:
+      printf("Value is 3\n");
+      break;
+  }
+  
+  double humiH = (1/100) * pow( (log(1-(shum/100))/(-c1*(stemp+c2)), (1/c3));
+  double humiCP = d1 - d2*(log(-(stemp+d3)*log(shum/100));
+  
+  double meanhumi= (humiH + humiCP)/2;
+  
+  */
+  
+  humi = shum;
+   
   return true;
 }
 
